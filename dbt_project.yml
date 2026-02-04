@@ -48,6 +48,10 @@ models:
       portfolio:     # one specific data mart
         +materialized: table
         +schema: MART_PORTFOLIO
+  staging:    #Applies to all files under models/staging/
+        +materialized: view
+        +schema: STAGING
 snapshots:
   portfolio_tracking:
     +target_schema: SNAPSHOTS
+
