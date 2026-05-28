@@ -1,4 +1,4 @@
-DROP VIEW PORTFOLIO_TRACKING.SOURCE_DATA_MART_PORTFOLIO.STG_ABC_BANK_POSITION;
+{{ config(materialized='ephemeral') }}
 
 -----------
 WITH
