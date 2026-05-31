@@ -10,4 +10,7 @@ models:
       - name: UNREALIZED_PROFIT_PCT
         description: The unrealized profit % on the position.
         tests:
-          - not_null 
+          - not_null
+  - name: REF_SECURITY_INFO_ABC_BANK
+    tests:
+      - has_default_record
