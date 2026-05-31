@@ -14,23 +14,7 @@ src_data as (
     
     {{ source('seeds', 'ABC_Bank_SECURITY_INFO') }} 
 )
-, hashed as ( 
-    SELECT 
-        concat_ws('|', SECURITY_CODE) as SECURITY_HKEY , 
-        concat_ws('|',
-            SECURITY_CODE, 
-            SECURITY_NAME, 
-            SECTOR_NAME, 
-            INDUSTRY_NAME, 
-            COUNTRY_CODE, 
-            EXCHANGE_CODE 
-        ) as SECURITY_HDIFF 
-        , * EXCLUDE LOAD_TS 
-        , LOAD_TS as LOAD_TS_UTC 
-    FROM 
-        src_data 
-)
-, default_record as (
+, with_default_record as (
   SELECT
       '-1'      as SECURITY_CODE
     , 'Missing' as SECURITY_NAME
@@ -41,6 +25,18 @@ src_data as (
     , '2020-01-01'          as LOAD_TS_UTC
     , 'System.DefaultKey'   as RECORD_SOURCE
 ) 
+, hashed as (
+    SELECT
+          {{ dbt_utils.surrogate_key([ 'SECURITY_CODE' ])
+          }} as SECURITY_HKEY
+        , {{ dbt_utils.surrogate_key([
+              'SECURITY_CODE', 'SECURITY_NAME', 'SECTOR_NAME',
+               'INDUSTRY_NAME', 'COUNTRY_CODE', 'EXCHANGE_CODE' ])
+          }} as SECURITY_HDIFF
+        , * EXCLUDE LOAD_TS_UTC
+        , LOAD_TS_UTC as LOAD_TS_UTC
+    FROM with_default_record
+)
     SELECT 
         * 
     FROM hashed
