@@ -6,7 +6,8 @@ models:
       - name: UNREALIZED_PROFIT
         description: The unrealized profit on the position.
         tests:
-          - not_null
+          - not_null0.
+          
       - name: UNREALIZED_PROFIT_PCT
         description: The unrealized profit % on the position.
         tests:
