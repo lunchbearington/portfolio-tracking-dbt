@@ -1,4 +1,5 @@
 version: 2
+
 models:
   - name: REF_POSITION_ABC_BANK
     description: The positions we have in the ABC Bank portfolio.
@@ -6,23 +7,31 @@ models:
       - name: UNREALIZED_PROFIT
         description: The unrealized profit on the position.
         tests:
-          - not_null0.
-          
+          - not_null
+
       - name: UNREALIZED_PROFIT_PCT
         description: The unrealized profit % on the position.
         tests:
           - not_null
+
+      - name: POSITION_HKEY
+        tests:
+          - no_hash_collisions:
+              arguments:
+                hashed_fields:
+                  - ACCOUNT_CODE
+                  - SECURITY_CODE
+              config:
+                severity: error
+
+      - name: SECURITY_CODE
+        description: The code of the security in the position.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('REF_ABC_BANK_SECURITY_INFO')
+                field: SECURITY_CODE
+
   - name: REF_SECURITY_INFO_ABC_BANK
     tests:
       - has_default_record
-
-  - name: POSITION_HKEY
-    tests:
-      - no_hash_collisions:
-          arguments:
-            hashed_fields:
-              - ACCOUNT_CODE
-              - SECURITY_CODE
-          config:
-            severity: error
-
